@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { type ReactNode, useEffect, useMemo, useState } from "react";
 import {
   AlertTriangle,
   ArrowUpRight,
@@ -453,6 +453,36 @@ function StatusBadge({ status }: { status: string }) {
   );
 }
 
+function ChartShell({
+  className,
+  children,
+}: {
+  className: string;
+  children: ReactNode;
+}) {
+  const [ready, setReady] = useState(false);
+
+  useEffect(() => {
+    const frame = window.requestAnimationFrame(() => {
+      setReady(true);
+    });
+
+    return () => window.cancelAnimationFrame(frame);
+  }, []);
+
+  return (
+    <div className={`${className} w-full min-w-0`}>
+      {ready ? (
+        children
+      ) : (
+        <div className="flex h-full w-full items-center justify-center rounded-2xl bg-stone-50 text-sm text-stone-500 dark:bg-zinc-950/60 dark:text-zinc-400">
+          Loading chart...
+        </div>
+      )}
+    </div>
+  );
+}
+
 function JobDetailModal({
   job,
   onClose,
@@ -677,6 +707,7 @@ export default function Home() {
           return (
             <button
               key={kpi.label}
+              type="button"
               onClick={() => setActiveKpi(kpi)}
               className={`rounded-3xl border p-5 text-left shadow-sm transition hover:-translate-y-0.5 ${
                 selected
@@ -727,6 +758,7 @@ export default function Home() {
               (item) => (
                 <button
                   key={item}
+                  type="button"
                   onClick={() => setCategory(item as CategoryFilter)}
                   className={`rounded-full px-4 py-2 text-sm font-semibold transition ${
                     category === item
@@ -758,7 +790,7 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="h-[340px]">
+          <ChartShell className="h-[340px]">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={monthlyPerformance}>
                 <defs>
@@ -795,7 +827,7 @@ export default function Home() {
                 />
               </AreaChart>
             </ResponsiveContainer>
-          </div>
+          </ChartShell>
         </article>
 
         <article className="rounded-3xl border border-stone-200 bg-white p-6 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
@@ -806,7 +838,7 @@ export default function Home() {
             <h2 className="mt-2 text-2xl font-bold">Current repair queue</h2>
           </div>
 
-          <div className="h-[250px]">
+          <ChartShell className="h-[250px]">
             <ResponsiveContainer width="100%" height="100%">
               <RechartsPieChart>
                 <Pie
@@ -827,7 +859,7 @@ export default function Home() {
                 <Tooltip />
               </RechartsPieChart>
             </ResponsiveContainer>
-          </div>
+          </ChartShell>
 
           <div className="grid gap-3">
             {jobStatus.map((item, index) => (
@@ -867,7 +899,7 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="h-[330px]">
+          <ChartShell className="h-[330px]">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={filteredCategoryRevenue} layout="vertical">
                 <CartesianGrid
@@ -881,7 +913,7 @@ export default function Home() {
                 <Bar dataKey="revenue" fill="#10b981" radius={[0, 10, 10, 0]} />
               </BarChart>
             </ResponsiveContainer>
-          </div>
+          </ChartShell>
         </article>
 
         <article className="rounded-3xl border border-stone-200 bg-white p-6 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
@@ -897,7 +929,7 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="h-[330px]">
+          <ChartShell className="h-[330px]">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={leadSources}>
                 <CartesianGrid
@@ -925,7 +957,7 @@ export default function Home() {
                 />
               </BarChart>
             </ResponsiveContainer>
-          </div>
+          </ChartShell>
         </article>
       </section>
 
@@ -962,6 +994,7 @@ export default function Home() {
                 ].map(([key, label, Icon]) => (
                   <button
                     key={String(key)}
+                    type="button"
                     onClick={() => setActiveTab(key as DataTab)}
                     className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold transition ${
                       activeTab === key
