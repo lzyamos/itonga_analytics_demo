@@ -3,6 +3,7 @@
 import { type ReactNode, useEffect, useMemo, useState } from "react";
 import {
   AlertTriangle,
+  ArrowRight,
   ArrowUpRight,
   BarChart3,
   BriefcaseBusiness,
@@ -1270,11 +1271,13 @@ export default function Home() {
           </div>
 
           <a
-            href="https://itonga.dev"
-            className="inline-flex items-center gap-2 text-sm font-semibold text-emerald-700 hover:text-emerald-600 dark:text-emerald-300"
+            href="https://www.itonga.dev"
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex w-fit items-center justify-center gap-2 rounded-2xl bg-cyan-600 px-5 py-3 text-sm font-bold text-white transition hover:bg-cyan-500"
           >
-            Back to Itonga
-            <ArrowUpRight className="h-4 w-4" />
+            Return to Itonga
+            <ArrowRight className="h-4 w-4" />
           </a>
         </div>
       </footer>
